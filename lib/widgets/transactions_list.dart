@@ -2,6 +2,7 @@
 import '../models/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:math' as math;
 
 class TransactionList extends StatelessWidget {
   TextStyle get styles {
@@ -13,11 +14,12 @@ class TransactionList extends StatelessWidget {
   }
 
   final List<Transaction> transactions;
-  TransactionList(this.transactions);
+  final Function deleteTransactions;
+  TransactionList(this.transactions, this.deleteTransactions);
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 500,
+      height: 550,
       child: transactions.isEmpty
           ? Column(
               children: <Widget>[
@@ -56,6 +58,10 @@ class TransactionList extends StatelessWidget {
                         //       shape: BoxShape.circle),
                         //   height: 60,
                         //   width: 60,
+                        // backgroundColor: Color(
+                        //         (math.Random().nextDouble() * 0xFFFFFF).toInt())
+                        //     .withOpacity(0.5),
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                         radius: 30,
                         child: Padding(
                           padding: const EdgeInsets.all(6.0),
@@ -82,7 +88,8 @@ class TransactionList extends StatelessWidget {
                           Icons.delete,
                           color: Theme.of(context).errorColor,
                         ),
-                        onPressed: () {},
+                        onPressed: () =>
+                            deleteTransactions(transactions[index].id),
                       ),
                     ),
                   ),

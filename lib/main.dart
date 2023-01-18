@@ -22,14 +22,16 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Quicksand',
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)
             .copyWith(secondary: Colors.amber),
+        // errorColor: Colors.purple,
         appBarTheme: AppBarTheme(
           titleTextStyle: ThemeData.light()
               .textTheme
               .copyWith(
                 headline6: TextStyle(
-                    fontFamily: 'OpenSans',
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+                  fontFamily: 'OpenSans',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               )
               .headline6,
         ),
@@ -45,7 +47,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> transactions = [
+  final List<Transaction> _userTransactions = [
     Transaction(
       id: 't1',
       title: 'New shoes',
@@ -91,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   List<Transaction> get _recentTransactions {
-    return transactions.where(
+    return _userTransactions.where(
       (tx) {
         return tx.date.isAfter(
           DateTime.now().subtract(
@@ -104,13 +106,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _addNewTransaction(String txTitle, double txAmount, DateTime time) {
     final txNew = Transaction(
-      id: 't${transactions.length + 1}',
+      id: 't${_userTransactions.length + 1}',
       title: txTitle,
       amount: txAmount,
       date: time,
     );
     setState(() {
-      transactions.add(txNew);
+      _userTransactions.add(txNew);
     });
   }
 
@@ -126,6 +128,12 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       }),
     );
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransactions.removeWhere((tx) => tx.id == id);
+    });
   }
 
   @override
@@ -146,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: <Widget>[
             Chart(_recentTransactions),
-            TransactionList(transactions),
+            TransactionList(_userTransactions, _deleteTransaction),
           ],
         ),
       ),
