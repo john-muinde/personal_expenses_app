@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Personal Expenses',
       theme: ThemeData(
         fontFamily: 'Quicksand',
@@ -101,12 +102,12 @@ class _MyHomePageState extends State<MyHomePage> {
     ).toList();
   }
 
-  void _addNewTransaction(String txTitle, double txAmount) {
+  void _addNewTransaction(String txTitle, double txAmount, DateTime time) {
     final txNew = Transaction(
       id: 't${transactions.length + 1}',
       title: txTitle,
       amount: txAmount,
-      date: DateTime.now(),
+      date: time,
     );
     setState(() {
       transactions.add(txNew);

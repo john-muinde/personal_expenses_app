@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
+// ignore_for_file: sort_child_properties_last
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function transactionsHandler;
@@ -12,27 +14,43 @@ class NewTransaction extends StatefulWidget {
 }
 
 class _NewTransactionState extends State<NewTransaction> {
-  final titleController = TextEditingController();
+  final _titleController = TextEditingController();
 
-  final amountController = TextEditingController();
+  final _amountController = TextEditingController();
 
-  var datePickerController;
+  DateTime? _selectedDate;
 
   // const NewTransaction({super.key});
-  void submitData() {
-    final enteredTitle = titleController.text;
+  void _submitData() {
+    final enteredTitle = _titleController.text;
     double enteredAmount;
     try {
-      enteredAmount = double.parse(amountController.text);
+      enteredAmount = double.parse(_amountController.text);
     } catch (e) {
       enteredAmount = 0;
     }
 
-    if (enteredTitle.isEmpty || enteredAmount <= 0) {
+    if (enteredTitle.isEmpty || enteredAmount <= 0 || _selectedDate == null) {
       return;
     }
-    widget.transactionsHandler(enteredTitle, enteredAmount);
+    widget.transactionsHandler(enteredTitle, enteredAmount, _selectedDate);
     Navigator.of(context).pop();
+  }
+
+  void _presentDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    ).then(
+      (pickedDate) {
+        if (pickedDate == null) return;
+        setState(() {
+          _selectedDate = pickedDate;
+        });
+      },
+    );
   }
 
   @override
@@ -44,31 +62,29 @@ class _NewTransactionState extends State<NewTransaction> {
         child: Column(
           children: <Widget>[
             TextField(
-              onSubmitted: (_) => submitData(),
-              controller: titleController,
+              onSubmitted: (_) => _submitData(),
+              controller: _titleController,
               decoration: InputDecoration(
                 labelText: 'Title',
               ),
             ),
             TextField(
-              controller: amountController,
+              controller: _amountController,
               decoration: InputDecoration(
                 labelText: 'Amount',
               ),
               keyboardType: TextInputType.number,
-              onSubmitted: (_) => submitData(),
+              onSubmitted: (_) => _submitData(),
             ),
             Container(
               height: 70,
               child: Row(
                 children: <Widget>[
-                  // TextField(
-                  //   // controller: datePickerController,
-                  //   decoration: InputDecoration(
-                  //     labelText: 'Date',
-                  //   ),
-                  // ),
-                  Text('Not selected'),
+                  Expanded(
+                    child: Text(_selectedDate == null
+                        ? 'No Date Chosen'
+                        : 'Picked Date: ${DateFormat.yMd().format(_selectedDate as DateTime)}'),
+                  ),
                   TextButton(
                     child: Text(
                       'Choose Date',
@@ -76,7 +92,7 @@ class _NewTransactionState extends State<NewTransaction> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: _presentDatePicker,
                     style: ButtonStyle(
                       foregroundColor: MaterialStateProperty.all(
                         Theme.of(context).colorScheme.primary,
@@ -87,12 +103,11 @@ class _NewTransactionState extends State<NewTransaction> {
               ),
             ),
             ElevatedButton(
-              onPressed: submitData,
+              onPressed: _submitData,
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
                   Theme.of(context).colorScheme.primary,
                 ),
-
               ),
               child: Text('Add Transaction'),
             ),
