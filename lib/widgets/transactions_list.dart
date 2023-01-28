@@ -18,86 +18,82 @@ class TransactionList extends StatelessWidget {
   TransactionList(this.transactions, this.deleteTransactions);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 550,
-      child: transactions.isEmpty
-          ? Column(
-              children: <Widget>[
-                Text(
-                  'No Transactions Found',
-                  style: styles,
+    return transactions.isEmpty
+        ? Column(
+            children: <Widget>[
+              Text(
+                'No Transactions Found',
+                style: styles,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                height: 200,
+                child: Image.asset(
+                  'assets/image/waiting.png',
+                  fit: BoxFit.cover,
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 200,
-                  child: Image.asset(
-                    'assets/image/waiting.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ],
-            )
-          : ListView.builder(
-              itemBuilder: (ctx, index) {
-                return InkWell(
-                  onTap: () {
-                    SnackBar(
-                      content: Text("Long pressed"),
-                    );
-                  },
-                  child: Card(
-                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-                    elevation: 5,
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        // leading: Container(
-                        //   decoration: BoxDecoration(
-                        //       color: Theme.of(context).colorScheme.primary,
-                        //       shape: BoxShape.circle),
-                        //   height: 60,
-                        //   width: 60,
-                        // backgroundColor: Color(
-                        //         (math.Random().nextDouble() * 0xFFFFFF).toInt())
-                        //     .withOpacity(0.5),
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        radius: 30,
-                        child: Padding(
-                          padding: const EdgeInsets.all(6.0),
-                          child: FittedBox(
-                            child: Text(
-                              '\$${transactions[index].amount.toStringAsFixed(2)}',
-                            ),
+              ),
+            ],
+          )
+        : ListView.builder(
+            itemBuilder: (ctx, index) {
+              return InkWell(
+                onTap: () {
+                  SnackBar(
+                    content: Text("Long pressed"),
+                  );
+                },
+                child: Card(
+                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                  elevation: 5,
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      // leading: Container(
+                      //   decoration: BoxDecoration(
+                      //       color: Theme.of(context).colorScheme.primary,
+                      //       shape: BoxShape.circle),
+                      //   height: 60,
+                      //   width: 60,
+                      // backgroundColor: Color(
+                      //         (math.Random().nextDouble() * 0xFFFFFF).toInt())
+                      //     .withOpacity(0.5),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      radius: 30,
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: FittedBox(
+                          child: Text(
+                            '\$${transactions[index].amount.toStringAsFixed(2)}',
                           ),
                         ),
                       ),
-                      title: Text(
-                        transactions[index].title,
-                        style: styles,
-                      ),
-                      subtitle: Text(
-                        DateFormat.yMMMMEEEEd()
-                            .format(transactions[index].date),
-                        style: TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(
-                          Icons.delete,
-                          color: Theme.of(context).errorColor,
-                        ),
-                        onPressed: () =>
-                            deleteTransactions(transactions[index].id),
+                    ),
+                    title: Text(
+                      transactions[index].title,
+                      style: styles,
+                    ),
+                    subtitle: Text(
+                      DateFormat.yMMMMEEEEd().format(transactions[index].date),
+                      style: TextStyle(
+                        color: Colors.grey,
                       ),
                     ),
+                    trailing: IconButton(
+                      icon: Icon(
+                        Icons.delete,
+                        color: Theme.of(context).errorColor,
+                      ),
+                      onPressed: () =>
+                          deleteTransactions(transactions[index].id),
+                    ),
                   ),
-                );
-              },
-              itemCount: transactions.length,
-            ),
-    );
+                ),
+              );
+            },
+            itemCount: transactions.length,
+          );
   }
 }
 
