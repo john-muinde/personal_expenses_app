@@ -1,4 +1,4 @@
-# Personal Expoenses Tracker
+# Personal Expenses Tracker
 
 A Personal Expenses tracker app
 
