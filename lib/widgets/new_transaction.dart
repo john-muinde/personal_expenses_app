@@ -1,6 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 // ignore_for_file: sort_child_properties_last
 
+import 'dart:io';
+
+import 'package:expenses_app/widgets/adaptive_text_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -55,63 +59,60 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 10,
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: <Widget>[
-            TextField(
-              onSubmitted: (_) => _submitData(),
-              controller: _titleController,
-              decoration: InputDecoration(
-                labelText: 'Title',
-              ),
-            ),
-            TextField(
-              controller: _amountController,
-              decoration: InputDecoration(
-                labelText: 'Amount',
-              ),
-              keyboardType: TextInputType.number,
-              onSubmitted: (_) => _submitData(),
-            ),
-            Container(
-              height: 70,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Text(_selectedDate == null
-                        ? 'No Date Chosen'
-                        : 'Picked Date: ${DateFormat.yMd().format(_selectedDate as DateTime)}'),
-                  ),
-                  TextButton(
-                    child: Text(
-                      'Choose Date',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: _presentDatePicker,
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all(
-                        Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ElevatedButton(
-              onPressed: _submitData,
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  Theme.of(context).colorScheme.primary,
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 10,
+        child: Container(
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+          ),
+          child: Column(
+            children: <Widget>[
+              TextField(
+                onSubmitted: (_) => _submitData(),
+                controller: _titleController,
+                decoration: InputDecoration(
+                  labelText: 'Title',
                 ),
               ),
-              child: Text('Add Transaction'),
-            ),
-          ],
+              TextField(
+                controller: _amountController,
+                decoration: InputDecoration(
+                  labelText: 'Amount',
+                ),
+                keyboardType: TextInputType.number,
+                onSubmitted: (_) => _submitData(),
+              ),
+              Container(
+                height: 70,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(_selectedDate == null
+                          ? 'No Date Chosen'
+                          : 'Picked Date: ${DateFormat.yMd().format(_selectedDate as DateTime)}'),
+                    ),
+                    AdaptiveTextButton(
+                      onPressedFunction: _presentDatePicker,
+                      text: 'Choose Date',
+                    )
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                onPressed: _submitData,
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                    Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                child: Text('Add Transaction'),
+              ),
+            ],
+          ),
         ),
       ),
     );
