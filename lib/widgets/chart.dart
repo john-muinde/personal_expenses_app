@@ -51,11 +51,12 @@ class Chart extends StatelessWidget {
                 (recentTrans) => Flexible(
                   fit: FlexFit.tight,
                   child: ChartBar(
-                      recentTrans['day'] as String,
-                      recentTrans['amount'] as double,
-                      totalSpending == 0.0
-                          ? 0.0
-                          : (recentTrans['amount'] as double) / totalSpending),
+                    recentTrans['day'] as String,
+                    recentTrans['amount'] as double,
+                    totalSpending == 0.0
+                        ? 0.0
+                        : (recentTrans['amount'] as double) / totalSpending,
+                  ),
                 ),
               )
               .toList(),

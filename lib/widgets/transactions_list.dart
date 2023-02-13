@@ -1,10 +1,21 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables, use_key_in_widget_constructors
+import 'dart:math';
+
 import '../models/transactions.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'dart:math' as math;
 
-class TransactionList extends StatelessWidget {
+import 'transaction_item.dart';
+
+class TransactionList extends StatefulWidget {
+  final List<Transaction> transactions;
+  final Function deleteTransactions;
+  TransactionList(this.transactions, this.deleteTransactions);
+
+  @override
+  State<TransactionList> createState() => _TransactionListState();
+}
+
+class _TransactionListState extends State<TransactionList> {
   TextStyle get styles {
     return TextStyle(
       fontFamily: 'Quicksand',
@@ -13,12 +24,9 @@ class TransactionList extends StatelessWidget {
     );
   }
 
-  final List<Transaction> transactions;
-  final Function deleteTransactions;
-  TransactionList(this.transactions, this.deleteTransactions);
   @override
   Widget build(BuildContext context) {
-    return transactions.isEmpty
+    return widget.transactions.isEmpty
         ? LayoutBuilder(
             builder: (ctx, constraints) {
               return Column(
@@ -41,120 +49,16 @@ class TransactionList extends StatelessWidget {
               );
             },
           )
-        : ListView.builder(
-            itemBuilder: (ctx, index) {
-              return InkWell(
-                onTap: () {
-                  SnackBar(
-                    content: Text("Long pressed"),
-                  );
-                },
-                child: Card(
-                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-                  elevation: 5,
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      // leading: Container(
-                      //   decoration: BoxDecoration(
-                      //       color: Theme.of(context).colorScheme.primary,
-                      //       shape: BoxShape.circle),
-                      //   height: 60,
-                      //   width: 60,
-                      // backgroundColor: Color(
-                      //         (math.Random().nextDouble() * 0xFFFFFF).toInt())
-                      //     .withOpacity(0.5),
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      radius: 30,
-                      child: Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: FittedBox(
-                          child: Text(
-                            '\$${transactions[index].amount.toStringAsFixed(2)}',
-                          ),
-                        ),
-                      ),
-                    ),
-                    title: Text(
-                      transactions[index].title,
-                      style: styles,
-                    ),
-                    subtitle: Text(
-                      DateFormat.yMMMMEEEEd().format(transactions[index].date),
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    trailing: MediaQuery.of(context).size.width > 460
-                        ? TextButton.icon(
-                            onPressed: () =>
-                                deleteTransactions(transactions[index].id),
-                            icon: Icon(Icons.delete),
-                            label: Text('Delete'),
-                            style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all(
-                                  Theme.of(context).colorScheme.error),
-                            ),
-                          )
-                        : IconButton(
-                            icon: Icon(
-                              Icons.delete,
-                              color: Theme.of(context).colorScheme.error,
-                            ),
-                            onPressed: () =>
-                                deleteTransactions(transactions[index].id),
-                          ),
-                  ),
-                ),
-              );
-            },
-            itemCount: transactions.length,
+        : ListView(
+            children: widget.transactions
+                .map((tx) => TransactionItem(
+                      // key: UniqueKey(),
+                      key: ValueKey(tx.id),
+                      transaction: tx,
+                      styles: styles,
+                      deleteTransaction: widget.deleteTransactions,
+                    ))
+                .toList(),
           );
   }
 }
-
-
-
-
-
-//  child: Card(
-//                     child: Row(
-//                       children: <Widget>[
-//                         Container(
-//                           margin: EdgeInsets.symmetric(
-//                               vertical: 10, horizontal: 15),
-//                           decoration: BoxDecoration(
-//                             border: Border.all(
-//                               color: Theme.of(context).colorScheme.primary,
-//                               width: 2,
-//                             ),
-//                           ),
-//                           padding: EdgeInsets.all(10),
-//                           child: Text(
-//                             '\$${transactions[index].amount.toStringAsFixed(2)}',
-//                             textAlign: TextAlign.center,
-//                             style: TextStyle(
-//                               color: Theme.of(context).colorScheme.primary,
-//                               fontWeight: FontWeight.bold,
-//                               fontSize: 20,
-//                             ),
-//                           ),
-//                         ),
-//                         Column(
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: <Widget>[
-//                             Text(
-//                               transactions[index].title,
-//                               style: styles,
-//                             ),
-//                             Text(
-//                               DateFormat.yMMMMEEEEd()
-//                                   .format(transactions[index].date),
-//                               style: TextStyle(
-//                                 color: Colors.grey,
-//                               ),
-//                             ),
-//                           ],
-//                         )
-//                       ],
-//                     ),
-//                   ),
